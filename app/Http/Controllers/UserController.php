@@ -13,13 +13,11 @@ use Illuminate\Http\Request;
  * @author Ana Julia
  * @link https://github.com/anajuliabarreto
  * @date 2024-08-30 
- * @copyright UniEVANGÉLICA
+ * @copyright AnaJulia
  
  */class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+   
     public function index()
     {
         $user = User::select('id', 'name', 'email')->paginate('2');
@@ -31,17 +29,11 @@ use Illuminate\Http\Request;
         ];
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(UserCreateRequest $request)
     {
         $data = $request->all();
@@ -59,24 +51,19 @@ use Illuminate\Http\Request;
         ];
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
+    /*
+      Update 
      */
     public function update(Request $request, string $id)
     {
@@ -106,9 +93,6 @@ use Illuminate\Http\Request;
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         //
