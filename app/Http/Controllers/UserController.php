@@ -14,8 +14,7 @@ use Illuminate\Http\Request;
  * @link https://github.com/ViniciusSCS
  * @date 2024-08-23 21:48:54
  * @copyright UniEVANGÉLICA
- */
-class UserController extends Controller
+ */class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -81,6 +80,29 @@ class UserController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        try {
+            $data = $request->all();
+
+            $user = User::find($id);
+
+            $user->update([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => bcrypt($data['password']),
+            ]);
+
+            return [
+                'status' => 200,
+                'menssagem' => 'Usuário atualizado com sucesso!!',
+                'user' => $user
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status' => 400,
+                'menssagem' => 'Erro ao atualizar usuário!!',
+                'error' => $e->getMessage()
+            ];
+        }
     }
 
     /**
@@ -89,5 +111,22 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         //
+        try {
+            $user = User::find($id);
+
+            $user->delete();
+
+            return [
+                'status' => 200,
+                'menssagem' => 'Usuário deletado com sucesso!!',
+                'user' => $user
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status' => 400,
+                'menssagem' => 'Erro ao deletar usuário!!',
+                'error' => $e->getMessage()
+            ];
+        }
     }
 }
