@@ -15,17 +15,12 @@ use Illuminate\Http\Request;
  * @date 2024-08-30 
  * @copyright AnaJulia
  
- 
-class UserController extends Controller
+ */class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+   
     public function index()
     {
-        $user = User::select('id', 'name', 'email')
-            ->withTrashed()
-            ->paginate('10');
+        $user = User::select('id', 'name', 'email')->paginate('2');
 
         return [
             'status' => 200,
@@ -34,17 +29,12 @@ class UserController extends Controller
         ];
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(UserCreateRequest $request)
     {
         $data = $request->all();
@@ -62,83 +52,67 @@ class UserController extends Controller
         ];
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(string $id)
     {
-        $user = User::find($id);
-
-        if(!$user){
-            return [
-                'status' => 404,
-                'mensage' => 'Usuário não encontrado! Que triste!',
-                'user' => $user
-            ];
-        }
-
-        return [
-            'status' => 200,
-            'mensage' => 'Usuário encontrado com sucesso!!',
-            'user' => $user
-        ];
+        //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
+    /*
+      Update 
      */
-    public function update(UserUpdateRequest $request, string $id)
+    public function update(Request $request, string $id)
     {
-        $data = $request->all();
+        //
+        try {
+            $data = $request->all();
 
-        $user = User::find($id);
+            $user = User::find($id);
 
-        if(!$user){
+            $user->update([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => bcrypt($data['password']),
+            ]);
+
             return [
-                'status' => 404,
-                'mensage' => 'Usuário não encontrado! Que triste!',
+                'status' => 200,
+                'menssagem' => 'Usuário atualizado com sucesso!!',
                 'user' => $user
             ];
+        } catch (\Exception $e) {
+            return [
+                'status' => 400,
+                'menssagem' => 'Erro ao atualizar usuário!!',
+                'error' => $e->getMessage()
+            ];
         }
-
-        $user->update($data);
-
-        return [
-            'status' => 200,
-            'mensage' => 'Usuário atualizado com sucesso!!',
-            'user' => $user
-        ];
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        $user = User::find($id);
+        //
+        try {
+            $user = User::find($id);
 
-        if(!$user){
+            $user->delete();
+
             return [
-                'status' => 404,
-                'mensage' => 'Usuário não encontrado! Que triste!',
+                'status' => 200,
+                'menssagem' => 'Usuário deletado com sucesso!!',
                 'user' => $user
             ];
+        } catch (\Exception $e) {
+            return [
+                'status' => 400,
+                'menssagem' => 'Erro ao deletar usuário!!',
+                'error' => $e->getMessage()
+            ];
         }
-
-        $user->delete($id);
-
-        return [
-            'status' => 200,
-            'mensage' => 'Usuário deletado com sucesso!!'
-        ];
-
     }
 }
